@@ -1,0 +1,62 @@
+`timescale 1ns / 1ps
+
+module dram_tb;
+
+    reg clk;
+    reg word_line;
+    reg bit_line;
+    reg read_en;
+    reg write_en;
+    reg refresh;
+    wire data_out;
+
+    DRAM UUT (
+        .clk(clk),
+        .word_line(word_line),
+        .bit_line(bit_line),
+        .read_en(read_en),
+        .write_en(write_en),
+        .refresh(refresh),
+        .data_out(data_out)
+    );
+
+    always begin
+        #5 clk = ~clk;
+    end
+    
+    initial begin
+        clk = 0;
+        word_line = 0;
+        bit_line = 0;
+        read_en = 0;
+        write_en = 0;
+        refresh = 0;
+
+        #10 word_line = 1; 
+
+        #10 bit_line = 1; write_en = 1; 
+        #10 write_en = 0;  
+
+        #10 read_en = 1;   
+        #10 read_en = 0;  
+        
+        #10 refresh = 1;  
+        #10 refresh = 0;  
+        
+        #10 bit_line = 0; write_en = 1; 
+        #10 write_en = 0;  
+        
+        #10 read_en = 1;  
+        #10 read_en = 0;   
+        
+        #10 word_line = 0; bit_line = 1; write_en = 1; 
+        #10 write_en = 0;  
+        #10 word_line = 1;  
+        
+        #10 read_en = 1;   
+        #10 read_en = 0;   
+        #50 $finish;
+    end
+
+
+endmodule
